@@ -1,4 +1,5 @@
 /*
+SOLVED
 Create a report showing what gifts children want, with difficulty ratings and categorization.
 The primary wish will be the first choice
 The secondary wish will be the second choice
@@ -25,11 +26,9 @@ with cte_kids_wl as (
 		,wl.wishes ->> 'second_choice' as backup_wish
 		--primary colour
 		,(wl.wishes -> 'colors') ->> 0 as favorite_color
-  -- should we count distinct colours? like in array ["White","White","Red","Red"] is it 4 or 2 colours?
 		,json_array_length(wl.wishes -> 'colors') as color_count
 		,wl.wishes
 		,wl.submitted_date
-  -- rank for the latest submitted wishlist, is it correct?
 		,rank() over (partition by c.child_id order by wl.submitted_date desc) as rn
 	from wish_lists wl
 	inner join children c on c.child_id  = wl.child_id 
@@ -50,11 +49,9 @@ select
 		when tc.category = 'educational' then 'Learning Workshop'
 		else 'General Workshop'
 	end as workshop_assignment
+	--,c.wishes
 from cte_kids_wl as c
-  -- use the primary with for toy attributes?
-  -- it is used so for thr example, but no word about it in the task
 inner join toy_catalogue tc on tc.toy_name = c.primary_wish
-  -- only wishes from the latest list, is it correct?
-where c.rn = 1
+--where c.rn = 1
 order by c."name" asc
 limit 5
