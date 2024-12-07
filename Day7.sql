@@ -1,4 +1,5 @@
-/*NOT ACCEPTED*/
+/*SOLVED*/
+/*Dataset was updated*/
 with cte_exp as (
 	-- experience by skills
 	select e.primary_skill
@@ -10,7 +11,7 @@ with cte_exp as (
 ,cte_info as (
 	select old.*
 		,new.elf_id as new_id, new.elf_name as new_name, new.primary_skill as new_skill, new.years_experience as new_years	
-		,row_number() over (partition by old.primary_skill order by old.elf_id, new.elf_id) as rn
+		,row_number() over (partition by old.primary_skill order by old.elf_id, new.elf_id ) as rn
 	from workshop_elves as old
 	inner join cte_exp as c on c.primary_skill = old.primary_skill
 		and c.max_years = old.years_experience
