@@ -1,0 +1,25 @@
+/*SOLVED*/
+/*
+Submit the date where the following total quantity of drinks were consumed:
+
+HotCocoa: 38
+PeppermintSchnapps: 298
+Eggnog: 198
+*/
+with cte_drinks_by_day as (
+	select d.date
+		,sum(d.quantity) filter (where d.drink_name = 'Mulled wine') as Wine
+		,sum(d.quantity) filter (where d.drink_name = 'Hot Cocoa') as Cocoa
+		,sum(d.quantity) filter (where d.drink_name = 'Eggnog') as Eggnog
+		,sum(d.quantity) filter (where d.drink_name = 'Peppermint Schnapps') as Schnapps
+		,sum(d.quantity) filter (where d.drink_name = 'Baileys') as Baileys
+		,sum(d.quantity) filter (where d.drink_name = 'Sherry') as Sherry
+	from drinks d
+	group by d.date
+	order by 1	
+)
+select dbd.date
+from cte_drinks_by_day as dbd
+where dbd.Cocoa = 38
+	and dbd.Schnapps = 298
+	and dbd.Eggnog = 198
